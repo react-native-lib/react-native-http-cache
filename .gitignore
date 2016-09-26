@@ -1,3 +1,7 @@
+
+.npmignore
+
+ios/RCTHttpCache.xcodeproj/xcuserdata/joshua.xcuserdatad/
 /node_modules
 .idea
 build

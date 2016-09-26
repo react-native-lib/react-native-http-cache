@@ -32,19 +32,19 @@ RCT_EXPORT_METHOD(clearCache:(RCTResponseSenderBlock)resolve)
 
 RCT_EXPORT_METHOD(getImageCacheSize:(RCTResponseSenderBlock)resolve)
 {
-    NSURLCache *imageCache = [self imageCache];
+    NSCache *imageCache = [self imageCache];
     dispatch_queue_t queue = [self imageCacheQueue];
     if (imageCache == nil || queue == nil) {
         resolve(@[@"cache not found"]);
     }
     dispatch_async(queue, ^{
-        resolve(@[[NSNull null], @([imageCache currentDiskUsage])]);
+        resolve(@[[NSNull null], @(0)]);
     });
 }
 
 RCT_EXPORT_METHOD(clearImageCache:(RCTResponseSenderBlock)resolve)
 {
-    NSURLCache *imageCache = [self imageCache];
+    NSCache *imageCache = [self imageCache];
     dispatch_queue_t queue = [self imageCacheQueue];
  
     if (imageCache == nil || queue == nil) {
@@ -52,15 +52,15 @@ RCT_EXPORT_METHOD(clearImageCache:(RCTResponseSenderBlock)resolve)
     }
 
     dispatch_async(queue, ^{
-        [imageCache removeAllCachedResponses];
+        [imageCache removeAllObjects];
         resolve(@[[NSNull null]]);
     });
 }
 
-- (NSURLCache *)imageCache
+- (NSCache *)imageCache
 {
     RCTImageLoader* loader = _bridge.imageLoader;
-    NSURLCache *cache = [loader valueForKey:@"_URLCache"];
+    NSURLCache *cache = [[loader valueForKey:@"_imageCache"] valueForKey:@"_decodedImageCache"];
     
     return cache;
 }
@@ -68,7 +68,7 @@ RCT_EXPORT_METHOD(clearImageCache:(RCTResponseSenderBlock)resolve)
 - (dispatch_queue_t)imageCacheQueue
 {
     RCTImageLoader* loader = _bridge.imageLoader;
-    dispatch_queue_t queue = [loader valueForKey:@"_URLCacheQueue"];
+    dispatch_queue_t queue = [loader valueForKey:@"_URLRequestQueue"];
     return queue;
 }
 

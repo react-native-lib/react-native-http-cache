@@ -2,7 +2,7 @@
  * Created by tdzl2_000 on 2015-12-29.
  */
 import { NativeModules } from 'react-native';
-import promisify from 'es6-promisify';
+import promisify from "./promisify";
 
 const native = NativeModules.HttpCache;
 
